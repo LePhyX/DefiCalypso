@@ -124,16 +124,21 @@
             fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec?name=' + encodeURIComponent(name) + '&challenge=' + encodeURIComponent(challenge), {
                 method: 'POST'
             })
-            .then(response => response.json())
+            .then(response => response.text())  // Réponse en texte brut
             .then(data => {
                 // Effacer les champs du formulaire
                 document.getElementById('name').value = '';
                 document.getElementById('challenge').value = '';
                 
+                // Afficher le message de succès
+                alert(data);
+
                 // Recharger les défis
                 fetchChallenges();
             })
-            .catch(error => console.error('Erreur lors de l\'ajout du défi:', error));
+            .catch(error => {
+                console.error('Erreur lors de l\'ajout du défi:', error);
+            });
         });
 
         // Charger les défis dès l'ouverture de la page
