@@ -37,35 +37,7 @@
             <tbody id="acceptedChallenges"></tbody>
         </table>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     <style>
         body {
             background-image: url('https://cdn.shopify.com/s/files/1/0919/7790/8556/files/u9952816854_fzais_en_sorte_quil_ressemble__celui_mais_Un_giga_473067ac-ed49-4240-b634-fd29efcb1c74_3.png?v=1738504760');
@@ -119,4 +91,49 @@
         }
     </style>
 
+    <script>
+                // Fonction pour récupérer les défis depuis Google Sheets via l'API
+        function fetchChallenges() {
+          fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec') 
+            .then(response => response.json())
+            .then(data => {
+              const receivedChallengesTable = document.getElementById('receivedChallenges');
+              receivedChallengesTable.innerHTML = ''; // Vider le tableau avant de le remplir
+
+              data.forEach(challenge => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${challenge.name}</td><td>${challenge.challenge}</td>`;
+                receivedChallengesTable.appendChild(row);
+              });
+            })
+            .catch(error => console.error('Erreur lors de la récupération des défis:', error));
+        }
+
+        // Fonction pour ajouter un défi dans Google Sheets via l'API
+        document.getElementById('challengeForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const name = document.getElementById('name').value;
+          const challenge = document.getElementById('challenge').value;
+          
+          // Envoi des données à l'API
+          fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec?name=' + encodeURIComponent(name) + '&challenge=' + encodeURIComponent(challenge), {
+            method: 'POST'
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Effacer les champs du formulaire
+            document.getElementById('name').value = '';
+            document.getElementById('challenge').value = '';
+            
+            // Recharger les défis
+            fetchChallenges();
+          })
+          .catch(error => console.error('Erreur lors de l\'ajout du défi:', error));
+        });
+
+        // Charger les défis dès l'ouverture de la page
+        fetchChallenges();
+
+    </script>
 </body>
