@@ -1,0 +1,221 @@
+<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <div class="container">
+        <h2>Lâche ton Calyps'Challenge</h2>
+        <form id="challengeForm">
+            <input type="text" id="name" placeholder="Ton nom" required>
+            <input type="text" id="challenge" placeholder="Défi proposé" required>
+            <button type="submit">Ajouter</button>
+        </form>
+    </div>
+   
+    <div class="scrollable container">
+        <h2>Défis Reçus</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Défi</th>
+                </tr>
+            </thead>
+            <tbody id="receivedChallenges"></tbody>
+        </table>
+    </div>
+   
+    <div class="scrollable container">
+        <h2>Défis Acceptés</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Défi</th>
+                    <th>Lien</th>
+                </tr>
+            </thead>
+            <tbody id="acceptedChallenges"></tbody>
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <style>
+        body {
+            background-image: url('https://cdn.shopify.com/s/files/1/0919/7790/8556/files/u9952816854_fzais_en_sorte_quil_ressemble__celui_mais_Un_giga_473067ac-ed49-4240-b634-fd29efcb1c74_3.png?v=1738504760');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: rgba(24, 103, 139, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .scrollable {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    // Fonction pour ajouter un défi
+    const form = document.getElementById('challengeForm');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const challenge = document.getElementById('challenge').value;
+
+        fetch('http://localhost:3000/addChallenge', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, challenge })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            form.reset();
+            loadChallenges();
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Fonction pour charger les défis depuis le serveur
+    const loadChallenges = () => {
+        fetch('http://localhost:3000/getChallenges')
+        .then(response => response.json())
+        .then(challenges => {
+            const challengesTable = document.getElementById('receivedChallenges');
+            challengesTable.innerHTML = ''; // Clear previous challenges
+
+            challenges.forEach(challenge => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${challenge.name}</td>
+                    <td>${challenge.challenge}</td>
+                `;
+                challengesTable.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    };
+
+    // Charger les défis au démarrage
+    window.onload = loadChallenges;
+</script>
+
+
+
+</body>
