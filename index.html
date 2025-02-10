@@ -1,7 +1,11 @@
-<body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Calyps'Challenge</title>
+</head>
+<body>
     <div class="container">
         <h2>Lâche ton Calyps'Challenge</h2>
         <form id="challengeForm">
@@ -10,7 +14,7 @@
             <button type="submit">Ajouter</button>
         </form>
     </div>
-   
+
     <div class="scrollable container">
         <h2>Défis Reçus</h2>
         <table>
@@ -23,7 +27,7 @@
             <tbody id="receivedChallenges"></tbody>
         </table>
     </div>
-   
+
     <div class="scrollable container">
         <h2>Défis Acceptés</h2>
         <table>
@@ -37,7 +41,7 @@
             <tbody id="acceptedChallenges"></tbody>
         </table>
     </div>
-    
+
     <style>
         body {
             background-image: url('https://cdn.shopify.com/s/files/1/0919/7790/8556/files/u9952816854_fzais_en_sorte_quil_ressemble__celui_mais_Un_giga_473067ac-ed49-4240-b634-fd29efcb1c74_3.png?v=1738504760');
@@ -92,48 +96,48 @@
     </style>
 
     <script>
-                // Fonction pour récupérer les défis depuis Google Sheets via l'API
+        // Fonction pour récupérer les défis depuis Google Sheets via l'API
         function fetchChallenges() {
-          fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec') 
-            .then(response => response.json())
-            .then(data => {
-              const receivedChallengesTable = document.getElementById('receivedChallenges');
-              receivedChallengesTable.innerHTML = ''; // Vider le tableau avant de le remplir
+            fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec') // URL de ton API
+                .then(response => response.json())
+                .then(data => {
+                    const receivedChallengesTable = document.getElementById('receivedChallenges');
+                    receivedChallengesTable.innerHTML = ''; // Vider le tableau avant de le remplir
 
-              data.forEach(challenge => {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td>${challenge.name}</td><td>${challenge.challenge}</td>`;
-                receivedChallengesTable.appendChild(row);
-              });
-            })
-            .catch(error => console.error('Erreur lors de la récupération des défis:', error));
+                    data.forEach(challenge => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${challenge.name}</td><td>${challenge.challenge}</td>`;
+                        receivedChallengesTable.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Erreur lors de la récupération des défis:', error));
         }
 
         // Fonction pour ajouter un défi dans Google Sheets via l'API
         document.getElementById('challengeForm').addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const name = document.getElementById('name').value;
-          const challenge = document.getElementById('challenge').value;
-          
-          // Envoi des données à l'API
-          fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec?name=' + encodeURIComponent(name) + '&challenge=' + encodeURIComponent(challenge), {
-            method: 'POST'
-          })
-          .then(response => response.json())
-          .then(data => {
-            // Effacer les champs du formulaire
-            document.getElementById('name').value = '';
-            document.getElementById('challenge').value = '';
+            e.preventDefault(); // Empêche la page de se recharger
             
-            // Recharger les défis
-            fetchChallenges();
-          })
-          .catch(error => console.error('Erreur lors de l\'ajout du défi:', error));
+            const name = document.getElementById('name').value;
+            const challenge = document.getElementById('challenge').value;
+            
+            // Envoi des données à l'API
+            fetch('https://script.google.com/macros/s/AKfycby42Eq5fVeVSiPkl5wxkDYj4APrCVrOVRM9g8YPC3fuIjfvgm1Xk4PH-ON37OONgniJwg/exec?name=' + encodeURIComponent(name) + '&challenge=' + encodeURIComponent(challenge), {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Effacer les champs du formulaire
+                document.getElementById('name').value = '';
+                document.getElementById('challenge').value = '';
+                
+                // Recharger les défis
+                fetchChallenges();
+            })
+            .catch(error => console.error('Erreur lors de l\'ajout du défi:', error));
         });
 
         // Charger les défis dès l'ouverture de la page
         fetchChallenges();
-
     </script>
 </body>
+</html>
